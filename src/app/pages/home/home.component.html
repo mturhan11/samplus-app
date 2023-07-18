@@ -1,0 +1,247 @@
+<div id="page">
+  <dx-responsive-box singleColumnScreen="sm" [screenByWidth]="getSizeQualifier">
+    <dxi-row></dxi-row>
+
+    <dxi-col [ratio]="2"></dxi-col>
+    <dxi-col [ratio]="1"></dxi-col>
+
+    <dxi-item>
+      <dxi-location
+        [row]="0"
+        [col]="0"
+        screen="lg"
+      ></dxi-location>
+      <dxi-location
+        [row]="0"
+        [col]="0"
+        screen="sm"
+      ></dxi-location>
+      <div *dxTemplate>
+      <dx-responsive-box singleColumnScreen="sm" [screenByWidth]="getSizeQualifier">
+        <dxi-row></dxi-row>
+        <dxi-row></dxi-row>
+        <dxi-row></dxi-row>
+        <dxi-row></dxi-row>
+        <dxi-col [ratio]="1"></dxi-col>
+        <dxi-col [ratio]="1"></dxi-col>
+        <!--<dxi-item>
+          <dxi-location
+            [row]="0"
+            [col]="0"
+            [colspan]="1"
+            screen="lg"
+          >
+          </dxi-location>
+          <dxi-location
+            [row]="0"
+            [col]="0"
+            [colspan]="1"
+            screen="sm"
+          ></dxi-location>
+          <div *dxTemplate class="header item" style="padding:10px;">
+            <dx-button
+            stylingMode="contained"
+            text="Yeni Bildirim"
+            type="success"
+            width="100%"
+            (onClick)="click($event)"
+          >
+          </dx-button>
+          </div>
+        </dxi-item>
+        <dxi-item>
+          <dxi-location
+            [row]="0"
+            [col]="1"
+            [colspan]="1"
+            screen="lg"
+          ></dxi-location>
+          <dxi-location
+            [row]="0"
+            [col]="1"
+            [colspan]="1"
+            screen="sm"
+          ></dxi-location>
+          <div *dxTemplate class="header item" style="padding:10px;">
+          <dx-button
+            stylingMode="contained"
+            text="Yeni Görevler"
+            type="danger"
+            width="100%"
+            (onClick)="click($event)"
+          >
+          </dx-button>
+          </div>
+        </dxi-item>-->
+        <dxi-item>
+          <dxi-location
+            [row]="1"
+            [col]="0"
+            [colspan]="1"
+            screen="lg"
+          ></dxi-location>
+          <dxi-location
+            [row]="1"
+            [col]="0"
+            [colspan]="1"
+            screen="sm"
+          ></dxi-location>
+          <div *dxTemplate class="header item" style="border-radius:10px;  overflow: hidden; margin: 20px;background-color: #FFDAB9;">
+            <div style="font-size: 13pt; padding:20px 20px 0px 20px;"><i class="fa fa-bell"></i>&nbsp;&nbsp;Yaklaşan Görevler <i><b>({{countGorevlendirmeYaklasan}})</b></i></div>
+              <dx-list #dxListMesajlar (onItemClick)="yaklasanGorevBaslat($event)"
+              noDataText="Yaklaşan görev bulunamadı." [dataSource]="dataSourceGorevlendirmeYaklasan" keyExpr="id" style="padding:10px; height: 190px; max-height: 190px;">
+                  <div *dxTemplate="let data of 'item'">
+                      <div><b>{{data.aciklama}}</b>&nbsp;&nbsp;<i>({{data.adisoyadi}})</i></div>
+                      <div style="font-size: 8pt;"><b>Başlama Tarihi : </b> {{data.tarih}} <b>Bitiş Tarihi : </b>{{data.bitis_tarih}})</div>
+                      <!--<div style="padding: 10px;">{{data.kullanici_id}}</div>-->
+                  </div>
+              </dx-list> 
+          </div>
+        </dxi-item>
+        <dxi-item>
+          <dxi-location
+            [row]="1"
+            [col]="1"
+            [colspan]="1"
+            screen="lg"
+          ></dxi-location>
+          <dxi-location
+            [row]="1"
+            [col]="1"
+            [colspan]="1"
+            screen="sm"
+          ></dxi-location>
+          <div *dxTemplate class="header item" style="border-radius:10px;  overflow: hidden; margin: 20px;background-color: #FFFFE0;">
+            <div style="font-size: 13pt; padding:20px 20px 0px 20px;"><i class="fa fa-play"></i>&nbsp;&nbsp;Devam Eden Görevler <i><b>({{countGorevlendirmeDevamEden}})</b></i></div>
+            <dx-list #dxListMesajlar   (onItemClick)="devamEdenGorevBitir($event)"
+                noDataText="Devam Eden görev bulunamadı." [dataSource]="dataSourceGorevlendirmeDevamEden" keyExpr="id" style="padding:10px; height: 190px; max-height: 190px;">
+                <div *dxTemplate="let data of 'item'">
+                    <div><b>{{data.aciklama}}</b>&nbsp;&nbsp;<i>({{data.adisoyadi}})</i></div>
+                    <div style="font-size: 8pt;"><b>Başlama Tarihi : </b> {{data.tarih}} <b>Bitiş Tarihi : </b>{{data.bitis_tarih}}</div>
+                </div>
+            </dx-list> 
+        </div>
+        </dxi-item>
+        <dxi-item>
+          <dxi-location
+            [row]="2"
+            [col]="0"
+            [colspan]="2"
+            screen="lg"
+          ></dxi-location>
+          <dxi-location
+            [row]="2"
+            [col]="0"
+            [colspan]="2"
+            screen="sm"
+          ></dxi-location>
+          <div *dxTemplate class="header item" style="border-radius:10px;  overflow: hidden; margin: 20px;background-color: #DC143C; color: #fff;">
+            <div style="font-size: 13pt; padding:20px 20px 0px 20px;"><i class="fa fa-clock-o"></i>&nbsp;&nbsp;Geciken Görevler <i><b>({{countGorevlendirmeGeciken}})</b></i></div>
+            <dx-list #dxListGeciken     (onItemClick)="devamEdenGorevBitir($event)"
+              noDataText="Geciken görev bulunamadı." [dataSource]="dataSourceGorevlendirmeGeciken" keyExpr="id" style="padding:10px; height: 190px; max-height: 190px;">
+                <div *dxTemplate="let data of 'item'" style="color: #fff;">
+                    <div><b>{{data.aciklama}}</b>&nbsp;&nbsp;<i>({{data.adisoyadi}})</i></div>
+                    <div style="font-size: 8pt;"><b>Başlama Tarihi : </b> {{data.tarih}} <b>Bitiş Tarihi : </b>{{data.bitis_tarih}})</div>
+                    <!--<div style="padding: 10px;">{{data.kullanici_id}}</div>-->
+                </div>
+            </dx-list> 
+        </div>
+        </dxi-item>
+        <dxi-item>
+          <dxi-location
+            [row]="3"
+            [col]="0"
+            [colspan]="2"
+            screen="lg"
+          ></dxi-location>
+          <dxi-location
+            [row]="3"
+            [col]="0"
+            [colspan]="2"
+            screen="sm"
+          ></dxi-location>
+          <div *dxTemplate class="header item" style="border-radius:10px;  overflow: hidden; margin: 20px;background-color: lightgreen;">
+            <div style="font-size: 13pt; padding:20px 20px 0px 20px;"><i class="fa fa-thumbs-up"></i>&nbsp;&nbsp;Tamamlanan Görevler <i><b>({{countGorevlendirmeTamamlanan}})</b></i></div>
+            <dx-list #dxListMesajlar noDataText="Tamamlanan görev bulunamadı." [dataSource]="dataSourceGorevlendirmeTamamlanan" keyExpr="id" style="padding:10px; height: 190px; max-height: 190px;">
+                <div *dxTemplate="let data of 'item'">
+                    <div><b>{{data.aciklama}}</b>&nbsp;&nbsp;<i>({{data.adisoyadi}})</i></div>
+                    <div style="font-size: 8pt;"><b>Başlama Tarihi : </b> {{data.tarih}} <b>Bitiş Tarihi : </b>{{data.bitis_tarih}})</div>
+                    <!--<div style="padding: 10px;">{{data.kullanici_id}}</div>-->
+                </div>
+            </dx-list> 
+        </div>
+        </dxi-item>
+        </dx-responsive-box>
+      </div>
+    </dxi-item>
+
+    
+
+    <dxi-item>
+      <dxi-location
+      [row]="0"
+      [col]="1"
+      screen="lg"
+    ></dxi-location>
+    <dxi-location
+      [row]="0"
+      [col]="1"
+      screen="sm"
+    ></dxi-location>  
+    <div *dxTemplate> 
+      <dx-responsive-box singleColumnScreen="sm" [screenByWidth]="getSizeQualifier">
+        <dxi-row></dxi-row>
+        <dxi-row></dxi-row>
+        <dxi-col [ratio]="1"></dxi-col>
+        <dxi-item>
+        <dxi-location
+        [row]="0"
+        [col]="0"
+        [colspan]="1"
+        screen="lg"
+      ></dxi-location>
+      <dxi-location
+        [row]="0"
+        [col]="0"
+        [colspan]="1"
+        screen="sm"
+      ></dxi-location>
+      <div *dxTemplate class="content item" style="padding: 0 10px; ">
+        <h2 class="content-block">Kişisel Ajanda</h2>
+        <dx-scheduler
+          timeZone="Asia/Istanbul"
+          [dataSource]="dataSourceGorevlendirme"
+          [views]="['day', 'week', 'month']"
+          currentView="week"
+          [firstDayOfWeek]="1"
+          [currentDate]="currentDate"
+          [startDayHour]="8"
+          [endDayHour]="17"
+          height="480px"
+          width="100%"
+          textExpr="aciklama"
+          startDateExpr="tarih"
+          endDateExpr="bitis_tarih"
+          style="color: #000;"
+        >
+        <dxi-resource
+          fieldExpr="durum"
+          [allowMultiple]="false"
+          label="Durum"
+          [dataSource]="durumlar"
+        ></dxi-resource>
+        <dxi-resource
+          fieldExpr="kullanici_id"
+          [allowMultiple]="false"
+          label="Kullanıcı"
+          displayExpr="adisoyadi"
+          [dataSource]="dataStoreKullanicilar"
+        ></dxi-resource>
+        </dx-scheduler>
+      </div>
+      </dxi-item>
+      </dx-responsive-box>
+    </div>
+      </dxi-item> 
+  </dx-responsive-box>
+</div>

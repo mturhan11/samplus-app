@@ -1,0 +1,219 @@
+
+<div  style="padding: 0px 20px;">
+    <dx-responsive-box singleColumnScreen="sm" [screenByWidth]="getSizeQualifier">
+        <dxi-row></dxi-row>
+        <dxi-row></dxi-row>
+
+        <dxi-col [ratio]="1"></dxi-col>
+        <dxi-col [ratio]="1" style="text-align:right;"></dxi-col>
+        <dxi-item>
+            <dxi-location
+            [row]="0"
+            [col]="0"
+            screen="lg"
+            ></dxi-location>
+            <dxi-location
+            [row]="0"
+            [col]="0"
+            screen="sm"
+            ></dxi-location>
+            <div *dxTemplate>
+              <h2 class="content-block"><i class="{{pageIcon}}"></i>&nbsp;&nbsp;{{pageTitle}}</h2>
+            </div>
+        </dxi-item>
+        <dxi-item>
+            <dxi-location
+              [row]="0"
+              [col]="1"
+              screen="lg"
+            >
+            </dxi-location>
+            <dxi-location
+              [row]="0"
+              [col]="1"
+              screen="sm"
+            ></dxi-location>
+            <div *dxTemplate class="header item" style="padding:10px;">
+              <dx-button
+              stylingMode="contained"
+              text="Yeni Kullanıcı"
+              type="success"
+              width="100%"
+              height="100%"
+              (onClick)="click($event)"
+            >
+            </dx-button>
+            </div>
+          </dxi-item>
+        <dxi-item>
+            <dxi-location
+            [row]="1"
+            [col]="0"
+            [colspan]="2"
+            screen="lg"
+            ></dxi-location>
+            <dxi-location
+            [row]="1"
+            [col]="0"
+            [colspan]="2"
+            screen="sm"
+            ></dxi-location>
+            <div *dxTemplate>
+                <dx-data-grid class="dx-card wide-card" #dataGridVar
+                    [dataSource]="dataStore"
+                    (onCellPrepared)="onCellPrepared($event)"
+                    [repaintChangesOnly]="true"
+                    keyExpr="id"
+                    [showBorders]="true"
+                    [focusedRowEnabled]="true"
+                    [columnAutoWidth]="false"
+                    [columnHidingEnabled]="true">
+                    <dxo-editing
+                    mode="row"
+                    [allowUpdating]="true"
+                    [allowDeleting]="true"
+                    [useIcons]="true"
+                    ></dxo-editing>
+                    <dxo-paging [enabled]="false"></dxo-paging>
+                    <!--<dxo-paging [pageSize]="2"></dxo-paging>-->
+                    <dxo-group-panel [visible]="true"></dxo-group-panel>
+                    <dxo-pager [showPageSizeSelector]="true" [showInfo]="true"></dxo-pager>
+
+                    <dxi-column
+                        dataField="id"
+                        width="10%"
+                        [visible]="false"
+                        [hidingPriority]="1">
+                    </dxi-column>
+                    <dxi-column type="buttons" width="10%">
+                        <dxi-button name="edit"></dxi-button>
+                        
+                        <!--<dxi-button name="delete"></dxi-button>[visible]="isCloneIconVisible"
+                        [disabled]="isCloneIconDisabled"
+                        [onClick]="cloneIconClick"-->
+                        <dxi-button
+                        hint="Resim Değiştir"
+                        icon="image"
+                        
+                        ></dxi-button>
+                        <dxi-button name="delete"></dxi-button>
+                    </dxi-column>
+                    <dxi-column
+                        dataField="aktif"
+                        width="10%"
+                        [hidingPriority]="97">
+                    </dxi-column>
+                    <dxi-column
+                        dataField="adisoyadi"
+                        width="25%"
+                        caption="Adı Soyadı"
+                        [hidingPriority]="98">
+                    </dxi-column>
+                    <dxi-column
+                        dataField="eposta"
+                        width="25%"
+                        caption="e-Posta Adresi"
+                        [hidingPriority]="99">
+                    </dxi-column>
+                    <dxi-column
+                        dataField="kullanici"
+                        width="10%"
+                        caption="Kullanıcı"
+                        [hidingPriority]="12">
+                    </dxi-column>
+                    <dxi-column
+                        dataField="satinalma"
+                        width="10%"
+                        caption="Satınalma"
+                        [hidingPriority]="13">
+                    </dxi-column>
+                    <dxi-column
+                        dataField="yetkili"
+                        width="10%"
+                        caption="Yetkili"
+                        [hidingPriority]="14">
+                    </dxi-column>
+                </dx-data-grid>
+            </div>
+        </dxi-item>
+    </dx-responsive-box>
+</div>
+
+<dx-popup
+    width="70%"
+    height="auto"
+    [showTitle]="true"
+    title="Yeni Kullanıcı Ekleme"
+    [dragEnabled]="false"
+    [hideOnOutsideClick]="true"
+    [showCloseButton]="false"
+    container=".dx-viewport"
+    [(visible)]="popupVisible"
+    [closeOnOutsideClick]="false"
+  >
+    <dxi-toolbar-item
+      widget="dxButton"
+      toolbar="bottom"
+      location="before"
+      [options]="saveButtonOptions"
+    >
+    </dxi-toolbar-item>
+    <dxi-toolbar-item
+      widget="dxButton"
+      toolbar="bottom"
+      location="after"
+      [options]="closeButtonOptions"
+    >
+    </dxi-toolbar-item>
+    <dxo-position at="center" my="center"> </dxo-position>
+    <div *dxTemplate="let data of 'content'">
+        <form class="login-form" action="javascript:void(0)">       
+            <dx-form [formData]="formData" [disabled]="loading" #formVar>
+              <dxi-item dataField="email" editorType="dxTextBox"
+                [editorOptions]="{ stylingMode: 'filled', placeholder: 'e-Posta Adresi', mode: 'email' }">
+                <dxi-validation-rule type="required" message="e-Posta adresi gereklidir."></dxi-validation-rule>
+                <dxi-validation-rule type="email" message="e-Posta adresi hatalı"></dxi-validation-rule>
+                <dxi-validation-rule type="pattern" pattern="^[a-zA-Z0-9._-]+@sam-plus.com$" message="...@sam-plus.com şeklinde olmalı"></dxi-validation-rule>
+                <dxo-label [visible]="false"></dxo-label>
+              </dxi-item>  
+              <dxi-item dataField="adisoyadi" editorType="dxTextBox"
+                [editorOptions]="{ stylingMode: 'filled', placeholder: 'Adı Soyadı', mode: 'text' }">
+                <dxo-label [visible]="false"></dxo-label>
+              </dxi-item>  
+              <dxi-item dataField="avatar2">
+                <div *dxTemplate>
+                  <dx-file-uploader
+                    #fileUploader
+                    uploadUrl="{{_baseUrl}}/ws/ws-avatar.php"
+                    selectButtonText="Resim Seç"
+                    (onUploaded)="onUploaded($event)"
+                    [multiple]="false"
+                    accept="image/*"
+                    name="avatarFile"
+                    [(value)]="value"
+                    uploadMode="instantly"
+                  ></dx-file-uploader>
+                </div>
+                <dxo-label [visible]="true" title="Profil Resmi"></dxo-label>
+              </dxi-item>
+              <dxi-item dataField="avatar" editorType="dxTextBox" [disabled]="true"
+                (editorOptions)="{ stylingMode: 'filled', placeholder: 'Profil Resmi', mode: 'text'}">
+                <dxo-label [visible]="false"></dxo-label>
+              </dxi-item>  
+              <dxi-item dataField="yetki" editorType="dxCheckBox"
+                [editorOptions]="{ text: 'Yetkili', elementAttr: { class: 'form-text' } }">
+                <dxo-label [visible]="false"></dxo-label>
+              </dxi-item>
+              <dxi-item dataField="satinalma" editorType="dxCheckBox"
+                [editorOptions]="{ text: 'Satınalma', elementAttr: { class: 'form-text' } }">
+                <dxo-label [visible]="false"></dxo-label>
+              </dxi-item>
+              <dxi-item dataField="kullanici" editorType="dxCheckBox"
+                [editorOptions]="{ text: 'Kullanıcı', elementAttr: { class: 'form-text' } }">
+                <dxo-label [visible]="false"></dxo-label>
+              </dxi-item>
+            </dx-form>
+          </form>
+    </div>
+  </dx-popup>
+  

@@ -1,0 +1,26 @@
+
+<div  style="padding: 0px 20px;">
+    <dx-responsive-box singleColumnScreen="sm" [screenByWidth]="getSizeQualifier">
+        <dxi-row></dxi-row>
+        <dxi-row></dxi-row>
+
+        <dxi-col [ratio]="1"></dxi-col>
+        <dxi-col [ratio]="1" style="text-align:right;"></dxi-col>
+        <dxi-item>
+            <dxi-location
+            [row]="0"
+            [col]="0"
+            [colspan]="2"
+            screen="lg"
+            ></dxi-location>
+            <dxi-location
+            [row]="0"
+            [col]="0"
+            screen="sm"
+            ></dxi-location>
+            <div *dxTemplate>
+                <h2 class="content-block"><i class="{{pageIcon}}"></i>&nbsp;&nbsp;{{pageTitle}}</h2>
+            </div>
+        </dxi-item>
+    </dx-responsive-box>
+</div>

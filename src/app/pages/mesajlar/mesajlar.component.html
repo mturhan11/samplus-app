@@ -1,0 +1,179 @@
+
+<div  style="padding: 0px 20px;  ">
+    <dx-responsive-box singleColumnScreen="sm" [screenByWidth]="getSizeQualifier">
+        <dxi-row></dxi-row>
+        <dxi-row [shrink]="1"></dxi-row>
+
+        <dxi-col [ratio]="1"></dxi-col>
+        <dxi-col [ratio]="1"></dxi-col>
+        <dxi-col [ratio]="1" style="text-align:right;"></dxi-col>
+        <dxi-item>
+            <dxi-location
+            [row]="0"
+            [col]="0"
+            [colspan]="2"
+            screen="lg"
+            ></dxi-location>
+            <dxi-location
+            [row]="0"
+            [col]="0"
+            screen="sm"
+            ></dxi-location>
+            <div *dxTemplate>
+                <h2 class="content-block"><i class="{{pageIcon}}"></i>&nbsp;&nbsp;{{pageTitle}}</h2>
+            </div>
+        </dxi-item>
+        <dxi-item>
+            <dxi-location
+              [row]="0"
+              [col]="2"
+              screen="lg"
+            >
+            </dxi-location>
+            <dxi-location
+              [row]="0"
+              [col]="2"
+              screen="sm"
+            ></dxi-location>
+            <div *dxTemplate class="header item" style="padding:10px;">
+              <dx-button
+              stylingMode="contained"
+              text="Yeni Mesaj Gönder"
+              type="success"
+              width="100%"
+              height="100%"
+              (onClick)="click($event)"
+            >
+            </dx-button>
+            </div>
+          </dxi-item>
+        <dxi-item>
+            <dxi-location
+            [row]="1"
+            [col]="0"
+            [colspan]="1"
+            screen="lg"
+            ></dxi-location>
+            <dxi-location
+            [row]="1"
+            [col]="0"
+            screen="sm"
+            ></dxi-location>
+            <div *dxTemplate style="padding: 20px; height: 700px; max-height: 700px;">
+              <dx-list
+                [dataSource]="dataMesajlarGrup"
+                keyExpr="id"
+
+                (onItemClick)="dataMesajlarDetay($event)"
+                selectionMode="single"
+                displayExpr="adisoyadi"
+                >
+                <div *dxTemplate="let data of 'item'">
+                  <div *ngIf="data.okunmamis>0">
+                    <dx-box direction="row" width="100%" [height]="75">
+                      <dxi-item [ratio]="1"> <img src="../uploads/{{data.avatar}}"/></dxi-item>
+                      <dxi-item [ratio]="3" [baseSize]="0">
+                        <div>{{data.adisoyadi}} <font color="red"><i>({{data.okunmamis}})</i></font></div>
+                        <div><font color="red"><b>{{data.gorevi}}</b></font> <i>( {{data.eposta}} )</i></div>
+                      </dxi-item>
+                    </dx-box>
+                  </div>
+                  <div *ngIf="data.okunmamis<1">
+                    <dx-box direction="row" width="100%" [height]="75">
+                      <dxi-item [ratio]="1"> <img src="../uploads/{{data.avatar}}"/></dxi-item>
+                      <dxi-item [ratio]="3" [baseSize]="0">
+                        <div>{{data.adisoyadi}}</div>
+                        <div><font color="red"><b>{{data.gorevi}}</b> </font> <i>( {{data.eposta}} )</i></div>
+                      </dxi-item>
+                    </dx-box>
+                  </div>
+                </div>
+                </dx-list>
+          </div>
+            
+        </dxi-item>
+        <dxi-item>
+          <dxi-location
+          [row]="1"
+          [col]="1"
+          [colspan]="2"
+          screen="lg"
+          
+          ></dxi-location>
+          <dxi-location
+          [row]="1"
+          [col]="1"
+          screen="sm"
+          ></dxi-location>
+          <div *dxTemplate style="padding: 20px;"  >
+          <div><dx-text-box placeholder="Mesaj yazın, daha sonra enter tuşuna basın." [disabled]="_disabled" (onEnterKey)="mesajGonder($event)" #mesajGirisi></dx-text-box></div>
+          <dx-list #dxListMesajlar style="height: 600px; max-height: 600px;">
+              <div *dxTemplate="let data of 'item'">
+                <div *ngIf="data.gonderen_id==userID" style="text-align:right;">
+                  <div><b>{{data.gonderen}}</b></div>
+                  <div style="font-size: 8pt;"><b>Mesaj Tarihi:</b> {{data.tarih}} <i>(Okunma : {{data.okuma_tarih}})</i></div>
+                  <div style="padding: 10px;">{{data.mesaj}}</div>
+                </div>
+                <div *ngIf="data.gonderen_id!=userID" style="text-align:left;">
+                  <div><b>{{data.gonderen}}</b></div>
+                  <div style="font-size: 8pt;"><b>Mesaj Tarihi:</b> {{data.tarih}} <i>(Okunma : {{data.okuma_tarih}})</i></div>
+                  <div style="padding: 10px;">{{data.mesaj}}</div>
+                </div>
+              </div>
+          </dx-list>
+          </div>
+      </dxi-item>
+    </dx-responsive-box>
+</div>
+
+<!-- Satınalma Detayı -->
+
+<dx-popup
+  width="70%"
+  height="80%"
+  [showTitle]="true"
+  title="Mesaj Gönder"
+  [dragEnabled]="false"
+  [hideOnOutsideClick]="false"
+  [showCloseButton]="false"
+  container=".dx-viewport"
+  [(visible)]="popupVisible"
+>
+  <dxi-toolbar-item
+    widget="dxButton"
+    toolbar="bottom"
+    location="before"
+    [options]="saveButtonOptions"
+  >
+  </dxi-toolbar-item>
+  <dxi-toolbar-item
+    widget="dxButton"
+    toolbar="bottom"
+    location="after"
+    [options]="closeButtonOptions"
+  >
+  </dxi-toolbar-item>
+  <dxo-position at="center" my="center"> </dxo-position>
+  <div *dxTemplate="let data of 'content'">
+    <dx-scroll-view width="100%" height="100%">
+      <form class="login-form" action="javascript:void(0)">
+          <dx-form [formData]="formData" [disabled]="loading" #formVar>
+                <dxi-item dataField="gonderen_id" editorType="dxTextBox" [visible]="false"
+                  [editorOptions]="{ mode: 'number', value:userID}">
+                  <dxo-label [visible]="false" text="Giriş Yapan Kullanıcı"></dxo-label>
+                </dxi-item>
+                <dxi-item
+                  dataField="alici_id"
+                  editorType="dxSelectBox"
+                  [editorOptions]="{ dataSource: dataKullanicilar, displayExpr: 'adisoyadi', valueExpr: 'id' }">
+                  <dxo-label [visible]="true" text="Alıcı"></dxo-label>
+                </dxi-item>
+                <dxi-item dataField="mesaj" editorType="dxTextArea" 
+                  [editorOptions]="{ mode: 'text', height:'300px'}">
+                  <dxo-label [visible]="true" text="Kullanılacağı Yer"></dxo-label>
+                </dxi-item> 
+          </dx-form>
+        </form>
+    </dx-scroll-view>
+  </div>
+</dx-popup>

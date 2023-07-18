@@ -1,0 +1,181 @@
+                    <dx-data-grid class="dx-card wide-card"
+                    [dataSource]="dataStoreProjelerAlt"
+                    (onCellPrepared)="onCellPrepared($event)"
+                    [repaintChangesOnly]="true"
+                    [showBorders]="true"
+                    [focusedRowEnabled]="true"
+                    [columnAutoWidth]="false"
+                    [columnHidingEnabled]="true">
+                    <dxo-editing
+                    mode="row"
+                    [allowUpdating]="false"
+                    [allowDeleting]="yetkili"
+                    [useIcons]="true"
+                    >
+                    </dxo-editing>
+                    <dxo-scrolling rowRenderingMode="virtual"> </dxo-scrolling>
+                    <dxo-paging [pageSize]="10"> </dxo-paging>
+                    <dxo-pager
+                      [visible]="true"
+                      [allowedPageSizes]="[10, 'all']"
+                      displayMode="full"
+                      [showPageSizeSelector]="true"
+                      [showInfo]="true"
+                      [showNavigationButtons]="true"
+                    >
+                    </dxo-pager>
+                    <dxo-group-panel [visible]="false"></dxo-group-panel>
+                    <dxo-pager [showPageSizeSelector]="true" [showInfo]="true"></dxo-pager>
+  
+                    <dxi-column
+                        dataField="id"
+                        [visible]="false"
+                        [hidingPriority]="1">
+                    </dxi-column>
+                    <dxi-column type="buttons" width="10%" [minWidth]="150">
+                      <!--<dxi-button name="dosyalar" hint="Dosyalar" icon="fa fa-folder" [onClick]="dosyalarIconClick"></dxi-button>-->
+                      <dxi-button name="detay" hint="Proje Detay Oluştur" icon="fa fa-info" [onClick]="detayIconClick"></dxi-button>
+                      <dxi-button name="delete" ></dxi-button>
+                    </dxi-column>
+                    <dxi-column
+                        dataField="durum"
+                        [hidingPriority]="98"
+                        dataType="number"
+                        [allowEditing]="false"
+                        [showEditorAlways]="true"
+                        caption="Durum"
+                        >
+                            <dxo-lookup [dataSource]="durumlar" displayExpr="DurumText" valueExpr="id">
+                            </dxo-lookup>
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                    </dxi-column>
+                    <dxi-column
+                        dataField="musteri_id"
+                        caption="Müşteri"
+                        [allowEditing]="false"
+                        [hidingPriority]="97"
+                        dataType="number"
+                        >
+                        <dxo-lookup [dataSource]="dataStoreMusteriler" displayExpr="musteri_adi" valueExpr="id">
+                        </dxo-lookup>
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                    </dxi-column>
+                    <dxi-column
+                        dataField="urun_grubu"
+                        caption="Ürün Türü"
+                        [allowEditing]="false"
+                        [hidingPriority]="97"
+                        dataType="number"
+                        >
+                        <dxo-lookup [dataSource]="dataStoreUrunGrubu" displayExpr="grup_adi" valueExpr="id">
+                        </dxo-lookup>
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                    </dxi-column>
+                    <dxi-column
+                        dataField="proje_adi"
+                        caption="Proje Adı"
+                        [allowEditing]="true"
+                        [hidingPriority]="96">
+                    </dxi-column>
+                    <dxi-column
+                        dataField="baslangic_tarih"
+                        caption="Başlangıç Tarihi"
+                        [allowEditing]="true"
+                        dataType="datetime"
+                        [hidingPriority]="99">
+                    </dxi-column>
+                    <dxi-column
+                        dataField="teslim_tarih"
+                        caption="Teslim Tarihi"
+                        [allowEditing]="true"
+                        dataType="datetime"
+                        [hidingPriority]="99">
+                    </dxi-column>
+                    <dxi-column
+                        dataField="aciklama"
+                        caption="Açıklama"
+                        [allowEditing]="true"
+                        [hidingPriority]="96">
+                    </dxi-column>
+                    </dx-data-grid>
+
+                    <dx-popup
+  width="70%"
+  height="80%"
+  [showTitle]="true"
+  title="Proje Dokümanları"
+  [dragEnabled]="false"
+  [hideOnOutsideClick]="false"
+  [showCloseButton]="false"
+  container=".dx-viewport"
+  
+  [(visible)]="popupVisibleProjeDokumanlari"
+>
+  <dxi-toolbar-item
+    widget="dxButton"
+    toolbar="bottom"
+    location="after"
+    [options]="closeButtonOptionsProjeDokumanlari"
+  >
+  </dxi-toolbar-item>
+  <dxo-position at="center" my="center"> </dxo-position>
+  <div *dxTemplate="let data of 'content'">
+    <dx-scroll-view width="100%" height="100%">
+      <form class="login-form" action="javascript:void(0)">
+          <dx-form [formData]="formData" [disabled]="loadingProjeDokumanlari" #formProjeDokumanlari>
+            <dxi-item itemType="group" cssClass="first-group" [colCount]="3">
+                <dxo-col-count-by-screen 
+                  [lg]="3"  
+                  [sm]="1"> 
+                </dxo-col-count-by-screen>
+                <dxi-item itemType="group" colSpan="3">
+                  <dxi-item dataField="ust_proje" editorType="dxTextBox" [visible]="false"
+                    [editorOptions]="{ mode: 'text', value:'0'}">
+                  </dxi-item>
+                  <dxi-item>
+                    <div *dxTemplate style="max-height: 200px;">
+                        <dx-file-manager id="fileManagerProjeDokumanlari" 
+                        [fileSystemProvider]="remoteProvideProjeDokumanlari" selectionMode="single" height="560px" rootFolderName="Proje Dokumanları" currentPath="uploads">
+                            <dxo-permissions
+                              [create]="yetkili"
+                              [copy]="false"
+                              [move]="false"
+                              [delete]="yetkili"
+                              [rename]="false"
+                              [upload]="yetkili"
+                              [download]="true"
+                            >
+                            </dxo-permissions>
+                            <dxo-upload [chunkSize]="1000000000" [maxFileSize]="1000000000" ></dxo-upload>
+                            <dxo-item-view>
+                                <dxo-details>
+                                    <dxi-column dataField="thumbnail"></dxi-column>
+                                    <dxi-column dataField="name" sortOrder="asc" caption="Adı"></dxi-column>
+                                    <dxi-column dataField="dateModified" caption="Düzenleme Tarihi"></dxi-column>
+                                    <dxi-column dataField="size" caption="Boyut"></dxi-column>
+                                    <!-- ... -->
+                                </dxo-details>
+                            </dxo-item-view>
+                            <dxo-toolbar>
+                                <dxi-item name="create" text="KLASÖR OLUŞTUR" icon="fa fa-folder"></dxi-item>
+                                <!--<dxi-item widget="dxButton" [options]="{text:'YÜKLE'}"></dxi-item>-->
+                                <dxi-item name="upload" text="DOKÜMAN YÜKLE" icon="fa fa-upload"></dxi-item>
+                                <dxi-file-selection-item name="download" text="İNDİR" icon="fa fa-download"></dxi-file-selection-item>
+                                <dxi-file-selection-item name="delete" text="SİL" icon="fa fa-remove"></dxi-file-selection-item>
+                                <dxi-file-selection-item name="refresh" text="YENİLE" icon="fa fa-refresh"></dxi-file-selection-item>
+                            </dxo-toolbar>
+                            <dxo-context-menu>
+                                <dxi-item name="download" text="İNDİR" icon="fa fa-download"></dxi-item>
+                                <dxi-item name="delete" text="SİL" icon="fa fa-remove"></dxi-item>
+                            </dxo-context-menu>
+                            <dxo-notifications [showPanel]="false"></dxo-notifications>
+                          </dx-file-manager>
+                    </div>
+                  </dxi-item> 
+                </dxi-item>
+            </dxi-item>
+          </dx-form>
+        </form>
+      </dx-scroll-view>
+  </div>
+</dx-popup>

@@ -1,0 +1,46 @@
+<form class="login-form" (submit)="onSubmit($event)">
+
+  <dx-form [formData]="formData" [disabled]="loading">
+
+    <dxi-item dataField="email" editorType="dxTextBox"
+      [editorOptions]="{ stylingMode: 'filled', placeholder: 'e-Posta Adresi', mode: 'email' }">
+      <dxi-validation-rule type="required" message="e-Posta adresi gereklidir."></dxi-validation-rule>
+      <dxi-validation-rule type="email" message="e-Posta adresi hatalı"></dxi-validation-rule>
+      <dxi-validation-rule type="pattern" pattern="^[a-zA-Z0-9._-]+@sam-plus.com$" message="...@sam-plus.com şeklinde olmalı"></dxi-validation-rule>
+      <dxo-label [visible]="false"></dxo-label>
+    </dxi-item>
+
+    <dxi-item dataField="password" editorType="dxTextBox"
+      [editorOptions]="{ stylingMode: 'filled', placeholder: 'Parola', mode: 'password' }">
+      <dxi-validation-rule type="required" message="Parola gereklidir."></dxi-validation-rule>
+      <dxo-label [visible]="false"></dxo-label>
+    </dxi-item>
+
+    <dxi-item dataField="rememberMe" editorType="dxCheckBox"
+      [editorOptions]="{ text: 'Beni hatırla', elementAttr: { class: 'form-text' } }">
+      <dxo-label [visible]="false"></dxo-label>
+    </dxi-item>
+
+    <dxi-item itemType="button">
+      <dxo-button-options width="100%" type="default" [useSubmitBehavior]="true" [template]="'signInTemplate'">
+      </dxo-button-options>
+    </dxi-item>
+
+    <dxi-item>
+      <div class="link">
+        <a routerLink="/parola-sifirla">Parolamı unuttum.</a>
+      </div>
+    </dxi-item>
+    <ng-container *dxTemplate="let item of 'signInTemplate'">
+      <div>
+        <span class="dx-button-text">
+          <ng-container *ngIf="loading; else notLoading">
+            <dx-load-indicator width="24px" height="24px" [visible]="true"></dx-load-indicator>
+          </ng-container>
+          <ng-template #notLoading>Giriş Yap</ng-template>
+        </span>
+      </div>
+    </ng-container>
+
+  </dx-form>
+</form>
